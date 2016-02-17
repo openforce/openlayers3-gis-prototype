@@ -1,0 +1,62 @@
+<div>
+  <div class="toggler" xmlns="http://www.w3.org/1999/html">
+    <div id="mapTypeRadioButtons">
+      <nav id="layers">
+        <ul>
+          <li><input type="radio" name="layer" value="mapquest" checked> MapQuest OSM</li>
+          <li><input type="radio" name="layer" value="esri"> ESRI Maps</li>
+          <li><input type="radio" name="layer" value="basemapat"> BaseMapAt Wmts</li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-12">
+      <button class="btn btn-primary" ng-click="getAllElements()">Save</button>
+      <button id="drawButton" class="btn btn-primary" ng-click="drawFeature()">Draw</button>
+      <button class="btn btn-primary" ng-click="modifyFeature()">Modify</button>
+      <button id="changeMapButton" class="btn btn-primary">Change Map</button>
+      <button id="geolocation" class="btn btn-primary">CurrentPosition</button>
+      <button class="btn btn-primary" ng-click="enableMeasurement()">Measure</button>
+      <ol id="measureOutput">  </ol>
+    </div>
+  </div>
+
+  <!--TODO use css instead of the following-->
+    <br>
+    <br>
+    <br>
+  <div class="row">
+      <div class="col-sm-6">
+        <div id="geoTypeCombo" class="hidden">
+          <select ng-model="geometryType" ng-options="opt as opt for opt in features" ng-init="geometryType='None'"
+            ng-change="drawTypeChanged()">
+          </select>
+            <span>You have selected : {{geometryType}}</span>
+        </div>
+      </div>
+      <div id="infoMessage" class="col-sm-6 hidden-xs col-sm-5 alert alert-info fade in hidden">
+        <!--  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>   -->
+        <strong>Success!</strong> Not visible on samll devices.
+      </div>
+    </div>
+
+  <div class="row">
+      <div id="measureGeoTypeCombo" class="col-sm-6 hidden">
+        <select ng-model="measureGeoType" ng-options="opt as opt for opt in measureGeoTypes" ng-init="measureGeoType='Area'"
+                ng-change="startMeasurement()">
+        </select>
+        <span>You have selected : {{measureGeoType}}</span>
+        <input type="checkbox" ng-model="isGeodesic" ng-init="true"> use geodesic measures</input>
+      </div>
+    </div>
+
+    <!--TODO use css instead of the following-->
+    <br>
+
+  <div id="popup"></div>
+  <div id='map' class="map"></div>
+
+</div>
+
