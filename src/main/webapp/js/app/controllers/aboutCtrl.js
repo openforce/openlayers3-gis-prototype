@@ -14,16 +14,16 @@ define(function(require ){
           $scope.features = ['None', 'Polygon', 'LineString'];
           $scope.measureGeoTypes = ['Area', 'length'];
 
-          var map = init($http);
-          $scope.drawFeature = function(){
+          let map = init($http);
+          $scope.drawFeature = () => {
               $('#geoTypeCombo').removeClass('hidden');
               startDraw($scope, map);
           }
-          $scope.modifyFeature = function(){ 
+          $scope.modifyFeature = () => { 
                 modifyMyElements($scope, map);
           }
 
-          $scope.getAllElements = function(){
+          $scope.getAllElements = () => {
             getAllFeatures(map);
           }
 
@@ -31,19 +31,20 @@ define(function(require ){
            toggleChangeMapRadioButtons(map);
            zoomToCurrentLocation(map);
            addBasemapWMTSLayer(map, $http);
+           //displayMapPopup(map);
     });
 
 
-    var startDraw = function ($scope, map){
+    let startDraw = ($scope, map) => {
         $scope.geometryType = $scope.features[0]; 
-        var vectorSource = getVectorSource(map);
+        let vectorSource = getVectorSource(map);
 
         selectInteraction = refreshSelectInteraction(selectInteraction, map);
         if(typeof modifyInteraction !== 'undefined' && modifyInteraction !== null){ 
                map.removeInteraction(modifyInteraction); 
         }  
 
-        $scope.drawTypeChanged = function () {
+        $scope.drawTypeChanged =  () => {
                map.removeInteraction(drawInteraction); 
               // map.removeInteraction(selectInteraction);
                drawInteraction = getNewDrawInteraction($scope, vectorSource);
@@ -56,7 +57,7 @@ define(function(require ){
 
     }
 
-    var refreshSelectInteraction = function (selectInteraction, map){
+    let refreshSelectInteraction = (selectInteraction, map) => {
         if(typeof selectInteraction != 'undefined' && selectInteraction !== null){ 
               map.removeInteraction(selectInteraction); 
         }  
@@ -67,7 +68,7 @@ define(function(require ){
         return selectInteraction;
     }
 
-    var modifyMyElements = function ($scope, map){
+    let modifyMyElements = ($scope, map) => {
          // $('#geoTypeCombo').addClass('hidden');
         selectInteraction = refreshSelectInteraction(selectInteraction, map);
 
@@ -79,34 +80,33 @@ define(function(require ){
         }); 
         map.addInteraction(modifyInteraction);  
         selectInteraction.getFeatures().on('add', function(e) { 
-            var feature = e.element; 
+            let feature = e.element; 
             feature.on('change', function(e) { 
                  console.log('kkkkkkkvvvvv'); 
             }); 
         }); 
     }
 
-    var getNewDrawInteraction = function ($scope, vectorSource){
-          var retVal;
-          var value = $scope.geometryType;
-              if (value !== 'None') {
-                  retVal = new ol.interaction.Draw({
-                  source: vectorSource,
-                  type: /** @type {ol.geom.GeometryType} */ (value)
-                });
-                retVal.on('drawend', function(e) {
-                var feature = e.element;
-                      //generateWkt();
-                      console.log('dddkk');
-                });
-              }
+    let getNewDrawInteraction = ($scope, vectorSource) => {
+          let retVal;
+          let value = $scope.geometryType;
+          if (value !== 'None') {
+              retVal = new ol.interaction.Draw({
+              source: vectorSource,
+              type: /** @type {ol.geom.GeometryType} */ (value)
+            });
+            retVal.on('drawend', function(e) {
+            let feature = e.element;
+                  //generateWkt();
+                  console.log('dddkk');
+            });
+          }
           return retVal;
     }
 
 
-    function init($http) {
-
-       var view = new ol.View({
+    let init = ($http) => {
+       let view = new ol.View({
             //epsg: 31287 -mgi/ austria lambert
             projection: 'EPSG:3857',
             center: [1445590,6059660],
@@ -115,7 +115,7 @@ define(function(require ){
            // minZoom: 2
        });
 
-       var raster = new ol.layer.Tile({
+       let raster = new ol.layer.Tile({
          source: new ol.source.MapQuest({
             layer: 'osm'
             }),
@@ -123,7 +123,7 @@ define(function(require ){
         name: 'mapquest'
       });
 
-      var vectorLayer = new ol.layer.Vector({
+      let vectorLayer = new ol.layer.Vector({
           source: new ol.source.Vector(),
           style: new ol.style.Style({
             fill: new ol.style.Fill({
@@ -142,7 +142,7 @@ define(function(require ){
           })
       });
 
-      var map = new ol.Map({
+      let map = new ol.Map({
         layers: [raster, getEsriLayer(), vectorLayer],
        // layers: [vectorLayer],
         target: 'map',
@@ -153,7 +153,7 @@ define(function(require ){
 
     }
 
-    function displayMapPopup(map){
+    let displayMapPopup = (map) => {
 
           var element = $('#popup');
             var popup = new ol.Overlay({
@@ -174,7 +174,7 @@ define(function(require ){
                 if (feature) {
                     var coordinate = feature.getGeometry().getCoordinates();
                     element.show();
-                //	element.html(feature.get('text') +
+                //  element.html(feature.get('text') +
                     //    ol.coordinate.toStringHDMS(ol.proj.transform(coordinate, 'EPSG:3857', 'EPSG:4326')));
                     element.html('halli hallooooooo');
                     popup.setPosition(coordinate);
@@ -186,16 +186,16 @@ define(function(require ){
 
     }
 
-    function zoomToCurrentLocation(map){
-         var view = map.getView();
-         var geolocation = new ol.Geolocation({
+    let zoomToCurrentLocation = (map) => {
+         let view = map.getView();
+         let geolocation = new ol.Geolocation({
                  projection: view.getProjection(),
                  tracking: true
          });
 
          $('#geolocation').click(function() {
-                var position = geolocation.getPosition();
-                var point = new ol.layer.Vector({
+                let position = geolocation.getPosition();
+                let point = new ol.layer.Vector({
                     source: new ol.source.Vector({
                         features: [new ol.Feature({
                             geometry: new ol.geom.Point(position)
@@ -209,7 +209,7 @@ define(function(require ){
          });
     }
 
-    function toggleChangeMapRadioButtons(map){
+    let toggleChangeMapRadioButtons = (map) => {
 
           $('#mapTypeRadioButtons').hide();
           function toogleButton() {
@@ -223,10 +223,10 @@ define(function(require ){
           //set visible layer
           function showSelectedMap(){
             $('#layers input[type=radio]').change(function() {
-                var layer = $(this).val();
+                let layer = $(this).val();
 
                 map.getLayers().getArray().forEach(function(item) {
-                  var name = item.get('name');
+                  let name = item.get('name');
                   item.setVisible(name == layer);
                 });
               });
@@ -234,21 +234,21 @@ define(function(require ){
     }
 
 
-    function addBasemapWMTSLayer (map, $http){
-      var capabilitiesUrl = 'http://www.basemap.at/wmts/1.0.0/WMTSCapabilities.xml';
+    let addBasemapWMTSLayer = (map, $http) => {
+      let capabilitiesUrl = 'http://www.basemap.at/wmts/1.0.0/WMTSCapabilities.xml';
       //var capabilitiesUrl = 'http://maps.wien.gv.at/basemap/1.0.0/WMTSCapabilities.xml';
 
       // HiDPI support:
       // * Use 'bmaphidpi' layer (pixel ratio 2) for device pixel ratio > 1
       // * Use 'geolandbasemap' layer (pixel ratio 1) for device pixel ratio == 1
-      var hiDPI = ol.has.DEVICE_PIXEL_RATIO > 1;
-      var layer = hiDPI ? 'bmaphidpi' : 'geolandbasemap';
-      var tilePixelRatio = hiDPI ? 2 : 1;
+      let hiDPI = ol.has.DEVICE_PIXEL_RATIO > 1;
+      let layer = hiDPI ? 'bmaphidpi' : 'geolandbasemap';
+      let tilePixelRatio = hiDPI ? 2 : 1;
 
-       var response = $http.get(capabilitiesUrl);
-        response.success(function(data, status, headers, config) {
-             var result = new ol.format.WMTSCapabilities().read(data);
-             var options = ol.source.WMTS.optionsFromCapabilities(result, {
+       let response = $http.get(capabilitiesUrl);
+       response.success(function(data, status, headers, config) {
+             let result = new ol.format.WMTSCapabilities().read(data);
+             let options = ol.source.WMTS.optionsFromCapabilities(result, {
                 layer: layer,
                 matrixSet: 'google3857',
                 requestEncoding: 'REST',
@@ -256,7 +256,7 @@ define(function(require ){
               });
               options.tilePixelRatio = tilePixelRatio;
 
-              var tileLayer = new ol.layer.Tile({
+              let tileLayer = new ol.layer.Tile({
                  source: new ol.source.WMTS(options),
                  visible: false,
                  name: 'basemapat'
@@ -278,8 +278,8 @@ define(function(require ){
     }
 
 
-    function getVectorSource (map){
-      var source;
+    let getVectorSource = (map) => {
+      let source;
        map.getLayers().forEach(function(item){
            if(item instanceof ol.layer.Vector){
               source = item.getSource();
@@ -288,13 +288,13 @@ define(function(require ){
        return source;
     }
 
-    function getEsriLayer(){
-        var attribution = new ol.Attribution({
+    let getEsriLayer = () => {
+        let attribution = new ol.Attribution({
           html: 'Tiles &copy; <a href="http://services.arcgisonline.com/ArcGIS/' +
               'rest/services/World_Topo_Map/MapServer">ArcGIS</a>'
         });
 
-        var esri = new ol.layer.Tile({
+        let esri = new ol.layer.Tile({
              source: new ol.source.XYZ({
                  attributions: [attribution],
                  url: 'http://server.arcgisonline.com/ArcGIS/rest/services/' +
@@ -307,14 +307,14 @@ define(function(require ){
         return esri;
     }
 
-    function getAllFeatures(map){
+    let getAllFeatures = (map) => {
          map.getLayers().forEach(function(item){
              if(item instanceof ol.layer.Vector){
-                var source = item.getSource();
-                var features = source.getFeatures();
+                let source = item.getSource();
+                let features = source.getFeatures();
                 console.log('numeber of features:' + features.length);
-                var abort = false;
-                for(var i=0; i<features.length && !abort; i++){
+                let abort = false;
+                for(let i=0; i<features.length && !abort; i++){
                     abort = checkIntersection(source, features[i]);
                }
              }
@@ -322,12 +322,12 @@ define(function(require ){
     }
 
 
-    function checkIntersection(source, toCheck){
-         var format = new ol.format.GeoJSON();
-         var features = source.getFeatures();
-         var abort = false;
-         for(var i=0; i<features.length && !abort; i++){
-                var featureI = features[i];
+    let checkIntersection = (source, toCheck) => {
+         let format = new ol.format.GeoJSON();
+         let features = source.getFeatures();
+         let abort = false;
+         for(let i=0; i<features.length && !abort; i++){
+                let featureI = features[i];
                 console.log('feautreId is: '+featureI.getId()); // the feature id has to be set.
                 console.log('feature.getGeometry'+ JSON.stringify(format.writeGeometry(featureI.getGeometry())));
                 console.log('Projection: '+JSON.stringify(format.readProjection(source)));
@@ -335,9 +335,9 @@ define(function(require ){
                 // var geoGesonFeatures = format.writeFeatures(features);
 
                 if(featureI != toCheck){
-                     var geoJsonFeatureI = format.writeFeatureObject(featureI);
-                     var geoJsonToCheck = format.writeFeatureObject(toCheck);
-                     var turfPoly = turf.intersect(geoJsonFeatureI, geoJsonToCheck);
+                     let geoJsonFeatureI = format.writeFeatureObject(featureI);
+                     let geoJsonToCheck = format.writeFeatureObject(toCheck);
+                     let turfPoly = turf.intersect(geoJsonFeatureI, geoJsonToCheck);
                      if(typeof turfPoly !== 'undefined'){
                           var intersection = format.readFeature(turfPoly);
                           if(typeof intersection !== 'undefined'){
