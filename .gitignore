@@ -1,17 +1,23 @@
-# Eclipse
+
 .classpath
 .project
 .settings/
-
-# Intellij
-.idea/
-*.iml
-*.iws
-
-# Mac
 .DS_Store
-
-# Maven
+*.log
+*/node_modules/
+*/bower_components/
+*/dist/
+.tmp
+.sass-cache
+*/app/lib
+.idea/
+*.iws
+*.iml
+*/docs/
+*/www/*
+*/plugins/*
+*/platforms/*
+node_modules
+bower_components
 log/
 target/
-
