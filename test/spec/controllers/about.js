@@ -3,7 +3,7 @@
 describe('Controller: AboutCtrl', function () {
 
   // load the controller's module
-  beforeEach(module('regiotoolApp'));
+  beforeEach(module('ol3_gis_prototypeApp'));
 
   var AboutCtrl,
     scope;

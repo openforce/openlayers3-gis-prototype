@@ -364,7 +364,7 @@ grunt.log.write('rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr');
     ngtemplates: {
       dist: {
         options: {
-          module: 'regiotoolApp',
+          module: 'ol3_gis_prototypeApp',
           htmlmin: '<%= htmlmin.dist.options %>',
           usemin: 'scripts/scripts.js'
         },
